@@ -1,0 +1,78 @@
+definitions:
+  timeFrame: &timeframe
+    type: object
+    additionalProperties: false
+    properties:
+      days: {type: number}
+      weeks: {type: number}
+      hours: {type: number}
+      minutes: {type: number}
+      seconds: {type: number}
+      milliseconds: {type: number}
+
+  field: &field
+    type: object
+    required: [type]
+    additionalProperties: false
+    oneOf:
+      - title: Enum
+        required: [values]
+        properties:
+          type: {enum: [enum]}
+          values:
+            type: array
+            items: {type: string}
+      - title: Timestamp
+        required: [format]
+        properties:
+          type: {enum: [timestamp]}
+          format: {type: string}
+      - title: Integer
+        required: [min, max]
+        properties:
+          type: {enum: [integer]}
+          min: {type: integer}
+          max: {type: integer}
+      - title: Float
+        required: [min, max]
+        properties:
+          type: {enum: [number]}
+          min: {type: number}
+          max: {type: number}
+      - title: Chance
+        required: [choices]
+        properties:
+          type: {enum: [chance]}
+          choices:
+            type: array
+            items:
+              type: object
+              required: [option, weight]
+              additionalProperties: false
+              properties:
+                option: {type: string}
+                weight: {type: number}
+      - title: IP Address
+        properties:
+          type: {enum: [ip]}
+    properties:
+      repeat: {type: integer}
+      change: {type: number}
+      value: {}
+
+required: [name, file, frequency, amount, format, fields]
+type: object
+additionalProperties: false
+
+properties:
+  enabled: {type: boolean}
+  name: {type: string}
+  file: {type: string}
+  format: {type: string}
+  frequency: *timeframe
+  offset: *timeframe
+  jitter: *timeframe
+  amount: {type: integer}
+  fields:
+    type: object
+    items: *field

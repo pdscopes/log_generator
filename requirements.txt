@@ -1,0 +1,2 @@
+PyYAML>=3.12
+jsonschema>=3.0.0
