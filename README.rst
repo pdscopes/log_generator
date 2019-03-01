@@ -95,11 +95,7 @@ Apache 2.4 Access:
     amount: 50
     fields:
       log_ip:
-        type: enum
-        values:
-          - 216.58.204.3
-          - 151.101.1.69
-          - 104.20.15.110
+        type: ip
       log_time:
         type: timestamp
         format: "%d/%b/%Y:%H:%M:%S"
