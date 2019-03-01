@@ -7,7 +7,7 @@ def readme():
 
 
 setup(name='log_generator',
-      version='1.0.0',
+      version='1.0.1',
       description='Generates dummy logs based on configuration files',
       long_description=readme(),
       classifiers=[
