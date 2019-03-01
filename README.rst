@@ -42,6 +42,7 @@ Each property of ``fields`` should be one of the following types:
 :type:      One of ``enum``, ``timestamp``, ``integer``, ``float``, ``chance``, ``ip``
 :repeat:    (optional) Number of times to repeat the current value before generating (default 1)
 :change:    (optional) Float probability [0..1] that the current value will change (default 1)
+:value:     (optional) The initial value for the field
 
 Enum (``enum``)
     A list of values that have a uniform distribution of being selected.
@@ -101,12 +102,7 @@ Apache 2.4 Access:
         format: "%d/%b/%Y:%H:%M:%S"
       log_method:
         type: enum
-        values:
-          - POST
-          - GET
-          - PUT
-          - PATCH
-          - DELETE
+        values: [POST, GET, PUT, PATCH, DELETE]
       log_path:
         type: enum
         values:
