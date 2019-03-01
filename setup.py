@@ -23,7 +23,7 @@ setup(name='log_generator',
           'jsonschema>=3.0.0',
       ],
       entry_points={
-          'console_scripts': ['log_generator=log_generator.generator:main']
+          'console_scripts': ['log-generator=log_generator.generate:main']
       },
       include_package_data=True,
       zip_safe=False)

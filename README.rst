@@ -5,7 +5,7 @@ Log Generator
 
 ::
 
-    usage: generate.py [-h] [--level LEVEL] [--truncate] /path/to/config
+    usage: log-generator [-h] [--level LEVEL] [--truncate] /path/to/config
 
     Generate log events
 
