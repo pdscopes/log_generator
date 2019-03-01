@@ -11,12 +11,14 @@ setup(name='log_generator',
       description='Generates dummy logs based on configuration files',
       long_description=readme(),
       classifiers=[
+          'License :: OSI Approved :: MIT License',
+          'Programming Language :: Python :: 3',
           'Programming Language :: Python :: 3.7',
           'Operating System :: OS Independent',
       ],
       author='Peter Scopes',
       author_email='peter.scopes@nccgroup.trust',
-      license='Copyright 2018 NCC',
+      license='MIT',
       packages=find_packages(),
       install_requires=[
           'PyYAML>=3.12',
@@ -26,4 +28,5 @@ setup(name='log_generator',
           'console_scripts': ['log-generator=log_generator.generate:main']
       },
       include_package_data=True,
+      platforms='any',
       zip_safe=False)

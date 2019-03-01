@@ -1,1 +1,2 @@
 include README.rst
+include log_generator/schema.yaml
