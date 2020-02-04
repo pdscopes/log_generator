@@ -10,7 +10,7 @@ Log Generator
     Generate log events
 
     positional arguments:
-      /path/to/config       Path to configuration directory
+      /path/to/config       Path to configuration directory or file
 
     optional arguments:
       -h, --help            show this help message and exit

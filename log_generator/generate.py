@@ -24,7 +24,7 @@ class Generator:
         self.truncate = truncate
         self.schema = yaml.safe_load(open(os.path.join(os.path.dirname(__file__), 'schema.yaml')))
 
-    def handle_signal(self, sig: int, frame) -> None:
+    def handle_signal(self, sig: int, _) -> None:
         """
         Handles signals to either exit or reload configuration files.
         """
@@ -40,6 +40,7 @@ class Generator:
         self.running = True
         self.reload = True
 
+        self.logger.info('Starting normal execution')
         # Block while running
         while self.running:
             if self.reload:
@@ -50,7 +51,7 @@ class Generator:
                 self.events = []
 
                 # Load the configuration files
-                for config_file in glob.glob('{}/*.yaml'.format(self.conf_dir)):
+                for config_file in Generator.gather_configs(self.conf_dir):
                     try:
                         event = threading.Event()
                         config = Generator.load_config(config_file, self.schema)
@@ -73,6 +74,15 @@ class Generator:
     def stop_generating(self) -> None:
         for e in self.events:
             e.set()
+
+    @staticmethod
+    def gather_configs(config_dir: str):
+        if not os.path.exists(config_dir):
+            raise FileNotFoundError(f'No such file or directory: {config_dir!r}')
+        elif os.path.isfile(config_dir):
+            return [config_dir]
+        else:
+            return glob.glob(f'{config_dir}/*.yaml')
 
     @staticmethod
     def load_config(config_file: str, schema: dict) -> dict:
@@ -159,7 +169,7 @@ class Generator:
             return config['timestamp'].strftime(field['format'])
 
         elif field['type'] == 'ip':
-            return '.'.join(str(random.randint(0, 255)) for i in range(4))
+            return '.'.join(str(random.randint(0, 255)) for _ in range(4))
 
         else:
             return None
@@ -191,7 +201,7 @@ class Generator:
 def main() -> None:
     # Define the command arguments
     parser = argparse.ArgumentParser(description='Generate log events')
-    parser.add_argument('config_dir', metavar='/path/to/config', type=str, help='Path to configuration directory')
+    parser.add_argument('config_dir', metavar='/path/to/config', type=str, help='Path to configuration directory or file')
     parser.add_argument('--level', '-l', default=logging.getLevelName(logging.INFO), help='Logging level')
     parser.add_argument('--truncate', '-t', action='store_true', help='Truncate the log files on start')
     args = parser.parse_args()
@@ -210,7 +220,11 @@ def main() -> None:
     signal.signal(signal.SIGHUP, generator.handle_signal)
 
     # Run the generator
-    generator.run()
+    try:
+        generator.run()
+    except FileNotFoundError as e:
+        generator.logger.critical(e)
+        sys.exit(1)
 
 
 if __name__ == '__main__':
