@@ -22,7 +22,7 @@ class Generator:
         self.running = False
         self.reload = True
         self.truncate = truncate
-        self.schema = yaml.load(open(os.path.join(os.path.dirname(__file__), 'schema.yaml')))
+        self.schema = yaml.safe_load(open(os.path.join(os.path.dirname(__file__), 'schema.yaml')))
 
     def handle_signal(self, sig: int, frame) -> None:
         """
@@ -77,7 +77,7 @@ class Generator:
     @staticmethod
     def load_config(config_file: str, schema: dict) -> dict:
         with open(config_file, 'r') as stream:
-            config = yaml.load(stream)
+            config = yaml.safe_load(stream)
             validate(config, schema)
 
             config.setdefault('enabled', True)

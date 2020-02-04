@@ -21,7 +21,7 @@ setup(name='log_generator',
       license='MIT',
       packages=find_packages(),
       install_requires=[
-          'PyYAML>=3.12',
+          'PyYAML>=5.1.1',
           'jsonschema>=3.0.0',
       ],
       entry_points={
