@@ -7,17 +7,18 @@ def readme():
 
 
 setup(name='log_generator',
-      version='1.0.1',
+      version='1.0.2',
       description='Generates dummy logs based on configuration files',
       long_description=readme(),
       classifiers=[
           'License :: OSI Approved :: MIT License',
           'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Operating System :: OS Independent',
       ],
       author='Peter Scopes',
-      author_email='peter.scopes@nccgroup.trust',
+      author_email='peter.scopes@nccgroup.com',
       license='MIT',
       packages=find_packages(),
       install_requires=[

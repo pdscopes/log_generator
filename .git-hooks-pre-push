@@ -1,0 +1,68 @@
+#!/bin/sh
+
+
+# This hook checks to make sure that the tag being pushed matches the valid
+# format "vX.Y.Z" where X, Y, and Z are integers and then checks critical
+# files to ensure that the version specified in the tag matches the version
+# specified in the file.
+#
+# This hook is called with the following parameters:
+#
+# $1 -- Name of the remote to which the push is being done
+# $2 -- URL to which the push is being done
+#
+# If pushing without using a named remote those arguments will be equal.
+#
+# Information about the commits which are being pushed is supplied as lines to
+# the standard input in the form:
+#
+#   <local ref> <local sha1> <remote ref> <remote sha1>
+#
+
+
+# Regex of the valid tag format
+tag_regex="^v[0-9]+\.[0-9]+\.[0-9]+"
+
+# Files that contain the version which should match the tag
+files=()
+files[0]='setup.py'
+files[1]='log_generator/__init__.py'
+
+
+
+while read local_ref local_sha remote_ref remote_sha
+do
+	# Skip refs being pushed that are not tags
+	if [[ ! $local_ref = refs/tags* ]]; then
+		continue
+	fi
+
+
+	# Extract the tag from $local_ref and validate the format
+	tag=${local_ref:10}
+	if [[ ! $tag =~ $tag_regex ]]
+	then
+		echo >&2 "Invalid tag \"$tag\" must be the form vX.Y.Z where X Y and Z are numbers"
+		exit 1
+	fi
+
+
+	# Extract the version from $tag and iterate through the files checking they have the $tag version
+	version=${tag:1}
+	match=()
+	match[0]="version='$version'"
+	match[1]="__version__ = '$version'"
+	for idx in ${!files[*]}; do
+		# Pipe the contents of the file through grep to check for a match
+		git show $local_sha:${files[$idx]} | grep -q "${match[$idx]}"
+		if [[ ! $? -eq 0 ]]
+		then
+			echo >&2 "Tag \"$tag\" does not match version in \"${files[$idx]}\""
+			exit 1
+		fi
+	done
+done
+
+exit 0
+
+
